@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements MessageListener {
 
+    private Speaker speaker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.printf("------- main");
@@ -18,14 +20,14 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         setContentView(R.layout.activity_main);
         String permission = Manifest.permission.RECEIVE_SMS;
         int grant = ContextCompat.checkSelfPermission(this, permission);
-        if ( grant != PackageManager.PERMISSION_GRANTED) {
+        if (grant != PackageManager.PERMISSION_GRANTED) {
             String[] permission_list = new String[1];
             permission_list[0] = permission;
 
             ActivityCompat.requestPermissions(this, permission_list, 1);
         }
         MessageReceiver.bindListener(this);
-        new Speaker(getApplicationContext()).speak("hello this is NH");
+        speaker = new Speaker(getApplicationContext());
     }
 
     @Override
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         System.out.printf("main");
         System.out.printf(message);
         Toast.makeText(this, "New Message Received: " + message, Toast.LENGTH_SHORT).show();
+        speaker.speak(message);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Speaker.tts.shutdown();
+    }
 }
