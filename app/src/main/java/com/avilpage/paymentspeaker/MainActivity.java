@@ -96,14 +96,10 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
             permission_list[0] = permission;
             ActivityCompat.requestPermissions(this, permission_list, 1);
         }
-        MessageReceiver.bindListener(this);
     }
 
     @Override
     public void messageReceived(String message) {
-        System.out.printf("main");
-        System.out.printf(message);
-        Toast.makeText(this, "New Message Received: " + message, Toast.LENGTH_SHORT).show();
         parsedMessage = parse(message);
         if (parsedMessage == null) {
             return;
@@ -130,6 +126,6 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        textToSpeech.shutdown();
+//        textToSpeech.shutdown();
     }
 }

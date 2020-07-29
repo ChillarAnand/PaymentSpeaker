@@ -12,7 +12,7 @@ public class Speaker extends Activity {
     static TextToSpeech textToSpeech;
     private static Context context;
 
-    public Speaker(Context context) {
+    public Speaker() {
         initTTS();
     }
 
