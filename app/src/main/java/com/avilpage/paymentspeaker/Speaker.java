@@ -1,52 +1,49 @@
 package com.avilpage.paymentspeaker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Locale;
 
-public class Speaker implements TextToSpeech.OnInitListener {
+public class Speaker extends Activity {
 
-    static TextToSpeech tts;
+    static TextToSpeech textToSpeech;
     private static Context context;
 
     public Speaker(Context context) {
-        Speaker.context = context;
-        Speaker.tts = new TextToSpeech(
-                Speaker.context,
-                new TextToSpeech.OnInitListener() {
-                    @Override
-                    public void onInit(int status) {
-                        if (status != TextToSpeech.ERROR) {
-                            tts.setLanguage(Locale.US);
-                            speak("hello this is NH");
-                        }
-                    }
-                });
+        initTTS();
     }
 
-    @Override
-    public void onInit(int status) {
-        //check for successful instantiation
 
-        if (status == TextToSpeech.SUCCESS) {
-            if (tts.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
-                tts.setLanguage(Locale.US);
-            Log.e("TTS", "Initilization success!");
+    private void initTTS() {
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = textToSpeech.setLanguage(Locale.US);
 
-        } else if (status == TextToSpeech.ERROR) {
-            Log.e("TTS", "Initilization Failed!");
-        }
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "The Language is not supported!");
+                    } else {
+                        Log.i("TTS", "Language Supported.");
+                    }
+                    Log.i("TTS", "Initialization success.");
+                } else {
+                }
+            }
+        });
     }
 
     public void speak(String speech) {
-        if (speech == null || tts == null) {
+        if (speech == null || textToSpeech == null) {
+            Log.e("--------", speech + textToSpeech);
             return;
         }
         Log.d("----------", speech);
-        tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        textToSpeech.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
     }
 }
 
