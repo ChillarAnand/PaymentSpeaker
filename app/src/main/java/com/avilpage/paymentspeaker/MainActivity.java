@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     private String amount;
     private String amountInRupees;
     private static final Pattern amountPattern = Pattern.compile("\\d+\\.\\d{2} ");
-
+    private Random random = new Random();
+    private int randomNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +40,12 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     private void setListeners() {
         testButton = findViewById(R.id.testButton);
-
         testButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-
-                String data = "Credited. 30 Rupees.";
+                randomNumber = random.nextInt(1000);
+                String data = String.format("Credited. %s Rupees.", randomNumber);
                 Log.i("TTS", "button clicked: " + data);
                 speak(data);
             }
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
                 }
             }
         });
+        textToSpeech.setSpeechRate((float) 0.9);
     }
 
     private void checkPermissions() {
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     private String parse(String message) {
         message = message.toLowerCase();
         message = message.replaceAll(",", "");
-        if (!message.contains("paid") && !message.contains("credited")){
+        if (!message.contains("paid") && !message.contains("credited")) {
             return null;
         }
         Matcher matcher = amountPattern.matcher(message);

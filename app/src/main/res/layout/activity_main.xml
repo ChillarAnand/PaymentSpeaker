@@ -10,21 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome to Payment Speaker!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="16dp"
+            android:textAlignment="center"
             android:text="Don't waste your time checking completed payments. Let Payment Speaker announce the payments made. You can focus on serving new customers."
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -36,7 +32,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send a sample notification"
+            android:shadowRadius="5.0"
+            android:padding="16dp"
+            android:textAllCaps="false"
             tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:text="How it works?
+
+It reads incoming messages. If incoming message is a financial message, it detects if money is credited and how much. Then it will announce the details on speaker."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
