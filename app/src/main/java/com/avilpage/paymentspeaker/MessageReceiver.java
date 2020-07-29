@@ -13,7 +13,10 @@ public class MessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.printf("----------------- MR oR");
+        Intent serviceIntent = new Intent(context, SpeakerService.class);
+        context.startService(serviceIntent);
+
+
         Bundle data = intent.getExtras();
         Object[] pdus = (Object[]) data.get("pdus");
         for(int i=0; i<pdus.length; i++){

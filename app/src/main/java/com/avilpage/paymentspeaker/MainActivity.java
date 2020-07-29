@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         initTTS();
         setListeners();
         MessageReceiver.bindListener(this);
+        startService(new Intent(this, SpeakerService.class));
     }
 
     private void setListeners() {
