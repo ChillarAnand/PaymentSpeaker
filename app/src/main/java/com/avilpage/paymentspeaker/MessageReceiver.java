@@ -5,36 +5,46 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MessageReceiver extends BroadcastReceiver {
 
-    private static MessageListener mListener;
+    private static final Pattern amountPattern = Pattern.compile("\\d+\\.\\d{2} ");
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(context, SpeakerService.class);
-        context.startService(serviceIntent);
-
-
         Bundle data = intent.getExtras();
         Object[] pdus = (Object[]) data.get("pdus");
         for(int i=0; i<pdus.length; i++){
             SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
             String messageBody = smsMessage.getMessageBody();
-//            String message = "Sender : " + smsMessage.getDisplayOriginatingAddress()
-//                    + "Email From: " + smsMessage.getEmailFrom()
-//                    + "Emal Body: " + smsMessage.getEmailBody()
-//                    + "Display message body: " + smsMessage.getDisplayMessageBody()
-//                    + "Time in millisecond: " + smsMessage.getTimestampMillis()
-//                    + "Message: " + messageBody;
-            if (messageBody != null) {
-                mListener.messageReceived(messageBody);
+            String message = parse(messageBody);
+            if (message != null) {
+                Intent serviceIntent = new Intent(context, SpeakerService.class);
+                serviceIntent.putExtra(SpeakerService.MESSAGE, message);
+                context.startService(serviceIntent);
             }
         }
     }
 
-    public static void bindListener(MessageListener listener){
-        mListener = listener;
+    private String parse(String message) {
+        message = message.toLowerCase();
+        message = message.replaceAll(",", "");
+        if (!message.contains("paid") && !message.contains("credited")) {
+            return null;
+        }
+        Matcher matcher = amountPattern.matcher(message);
+        if (!matcher.find()) {
+            return null;
+        }
+        String amount = matcher.group(0);
+        String amountInRupees = amount.split("\\.")[0];
+        String parsedMessage = "Credited. " + amountInRupees + " rupees.";
+        return parsedMessage;
     }
+
 }
